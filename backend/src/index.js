@@ -1,32 +1,42 @@
+import dotenv from "dotenv"
+import connectDB from "./db/index.js"
 import express from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
-
 
 const app = express();
 
-app.use(cors())
-
-const port = process.env.PORT || 3000;
-
-app.get("/", (req, res) => {
-    res.send("Server is ready")
+dotenv.config({
+    path: './.env'
 })
 
-app.get("/api/test", (req, res) => {
-    const data = [
-        {
-            data: 1,
-            desc: "this is data1"
-        },
-        {
-            data: 2,
-            desc: "this is data2"
-        }
-    ]
-    res.send(data)
+connectDB()
+.then(() => {
+    app.listen(process.env.PORT || 3001, () => {
+        console.log("Server started on port", process.env.PORT);
+    })
+})
+.catch((err) => {
+    console.log("Mongodb connection failed !!! ", err);
 })
 
 
-app.listen(port, () => {
-    console.log(`server running on port ${port}`)
-})
+app.use(cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}))
+
+app.use(express.json({limit: "16kb"}))
+app.use(express.urlencoded({extended: true, limit: "16kb"}))
+app.use(express.static("public"))
+app.use(cookieParser())
+
+// router
+// import userRouter from './routes/user.routes.js';
+
+// routes declaration
+
+// app.use("/api/v1/users", userRouter)
+// app.use("/api/v1/users", require('./routes/user.routes.js'))
+
+export { app }
