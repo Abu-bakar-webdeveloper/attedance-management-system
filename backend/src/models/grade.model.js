@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const GradeSchema = new mongoose.Schema({
   criteria: String,
   minAttendance: Number,
