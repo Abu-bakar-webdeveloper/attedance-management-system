@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
-const UserSchema = new mongoose.Schema({
+import bycrypt from "bcrypt";
+import Jwt from "jsonwebtoken";
+
+
+const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
   role: { type: String, enum: ['student', 'admin'], default: 'student' },
-  profilePicture: String,
   attendance: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Attendance' }],
   leaveRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LeaveRequest' }]
 });
@@ -47,4 +50,4 @@ userSchema.pre("save", async function (next) {
     );
   };
 
-module.exports = mongoose.model('User', UserSchema);
+  export const User = mongoose.model("User", userSchema);
